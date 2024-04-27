@@ -7,70 +7,15 @@ import (
 	"time"
 )
 
-var JWT_KEY = []byte("your-secret-key")
-
-//
-//func ParseJWTToken(tokenString string) (*config.JWTClaim, error) {
-//	token, err := jwt.ParseWithClaims(tokenString, &config.JWTClaim{}, func(token *jwt.Token) (interface{}, error) {
-//		return config.JWT_KEY, nil
-//	})
-//
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	claims, ok := token.Claims.(*config.JWTClaim)
-//	if !ok || !token.Valid {
-//		return nil, fmt.Errorf("Invalid token")
-//	}
-//
-//	return claims, nil
-//}
-//func CheckToken(tokenString string) error {
-//	// Periksa apakah token kosong
-//	if tokenString == "" {
-//		return errors.New("token is empty")
-//	}
-//
-//	// Periksa apakah tokenString mengandung prefiks "Bearer " dan hapus prefiks tersebut
-//	const bearerPrefix = "Bearer "
-//	if len(tokenString) > len(bearerPrefix) && tokenString[:len(bearerPrefix)] == bearerPrefix {
-//		tokenString = tokenString[len(bearerPrefix):]
-//	}
-//
-//	// Parse token dengan klaim yang diharapkan
-//	token, err := jwt.ParseWithClaims(tokenString, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
-//		// Kembalikan kunci rahasia untuk verifikasi
-//		return JWT_KEY, nil
-//	})
-//	if err != nil {
-//		log.Println("Error parsing token:", err)
-//		return errors.New("invalid token")
-//	}
-//
-//	// Periksa apakah token valid dan klaim tersedia
-//	claims, ok := token.Claims.(*jwt.RegisteredClaims)
-//	if !ok || !token.Valid {
-//		log.Println("Invalid claims or token")
-//		return errors.New("invalid claims or token")
-//	}
-//
-//	// Periksa apakah token sudah kadaluarsa
-//	if claims.ExpiresAt != nil && claims.ExpiresAt.Before(time.Now()) {
-//		log.Println("Token has expired")
-//		return errors.New("token is expired")
-//	}
-//
-//	// Token valid dan belum kadaluarsa
-//	return nil
-//}
-
-func GenerateJWT(signingKey []byte, userID string, email string) (string, error) {
+func GenerateJWT(signingKey []byte, userID string, email string, role string) (string, error) {
 	// Buat klaim untuk token JWT
-	claims := &jwt.RegisteredClaims{
-		Issuer:    "room-meet",                                          // Ganti dengan nama aplikasi Anda
-		Subject:   userID,                                               // Sesuaikan sesuai kebutuhan Anda
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 10)), // Token kedaluwarsa dalam 10 menit
+	expirationTime := time.Now().Add(10 * time.Minute)
+	claims := jwt.MapClaims{
+		"email": email,                 // Klaim `email`
+		"role":  role,                  // Klaim `role`
+		"exp":   expirationTime.Unix(), // Waktu kedaluwarsa token dalam format Unix
+		"iss":   "room-meet",           // Nama aplikasi atau entitas yang menerbitkan token
+		"sub":   email,                 // Subjek token (dapat menggunakan `email` sebagai subjek)
 	}
 
 	// Buat token JWT dengan klaim dan metode tanda tangan HS256
@@ -86,32 +31,64 @@ func GenerateJWT(signingKey []byte, userID string, email string) (string, error)
 }
 
 // Fungsi untuk memvalidasi token JWT
-func CheckJWT(tokenString string, signingKey []byte) error {
-	// Hapus prefiks "Bearer " jika ada
-	if strings.HasPrefix(tokenString, "Bearer ") {
-		tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+//func CheckJWT(tokenString string, signingKey []byte) error {
+//	// Hapus prefiks "Bearer " jika ada
+//	if strings.HasPrefix(tokenString, "Bearer ") {
+//		tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+//	}
+//
+//	// Parse token dengan klaim yang diharapkan (jwt.RegisteredClaims)
+//	token, err := jwt.ParseWithClaims(tokenString, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
+//		// Kembalikan kunci rahasia untuk verifikasi
+//		return signingKey, nil
+//	})
+//
+//	if err != nil {
+//		return errors.New("invalid token")
+//	}
+//
+//	// Periksa apakah token valid dan klaim tersedia
+//	if claims, ok := token.Claims.(*jwt.RegisteredClaims); ok && token.Valid {
+//		// Periksa apakah token sudah kedaluwarsa
+//		if claims.ExpiresAt != nil && claims.ExpiresAt.Before(time.Now()) {
+//			return errors.New("token has expired")
+//		}
+//	} else {
+//		return errors.New("invalid claims or token")
+//	}
+//
+//	// Jika token valid dan belum kedaluwarsa, tidak ada error
+//	return nil
+//}
+
+func CheckJWT(tokenString string, signingKey []byte) (*jwt.MapClaims, error) {
+	// Periksa apakah token kosong
+	if tokenString == "" {
+		return nil, errors.New("token is empty")
 	}
 
-	// Parse token dengan klaim yang diharapkan (jwt.RegisteredClaims)
-	token, err := jwt.ParseWithClaims(tokenString, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
+	// Hapus prefiks "Bearer " jika ada
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+
+	// Parse token
+	token, err := jwt.ParseWithClaims(tokenString, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 		// Kembalikan kunci rahasia untuk verifikasi
 		return signingKey, nil
 	})
-
 	if err != nil {
-		return errors.New("invalid token")
+		return nil, errors.New("invalid token")
 	}
 
 	// Periksa apakah token valid dan klaim tersedia
-	if claims, ok := token.Claims.(*jwt.RegisteredClaims); ok && token.Valid {
+	if claims, ok := token.Claims.(*jwt.MapClaims); ok && token.Valid {
 		// Periksa apakah token sudah kedaluwarsa
-		if claims.ExpiresAt != nil && claims.ExpiresAt.Before(time.Now()) {
-			return errors.New("token has expired")
+		if exp, ok := (*claims)["exp"].(int64); ok {
+			if time.Now().Unix() > exp {
+				return nil, errors.New("token is expired")
+			}
 		}
+		return claims, nil
 	} else {
-		return errors.New("invalid claims or token")
+		return nil, errors.New("invalid claims or token")
 	}
-
-	// Jika token valid dan belum kedaluwarsa, tidak ada error
-	return nil
 }

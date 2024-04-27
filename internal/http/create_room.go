@@ -3,7 +3,6 @@ package http
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 	"room-meet/domain/entity"
 	"room-meet/helper"
@@ -17,12 +16,20 @@ func (a RoomHandler) CreateRoom(w http.ResponseWriter, r *http.Request) {
 		req request.CreateRoomRequest
 	)
 	token := r.Header.Get("Authorization")
-	err := helper.CheckJWT(token, config.JWT_KEY)
-	log.Println(err)
+	claim, err := helper.CheckJWT(token, config.JWT_KEY)
 	if err != nil {
 		helper.RespondWithJSON(w, http.StatusForbidden, response.Status{
 			Code:    403,
 			Message: "Invalid token",
+		})
+		return
+	}
+	mapClaims := *claim
+	role, _ := mapClaims["role"].(string)
+	if role != "admin" {
+		helper.RespondWithJSON(w, http.StatusForbidden, response.Status{
+			Code:    403,
+			Message: "only admin can update status",
 		})
 		return
 	}

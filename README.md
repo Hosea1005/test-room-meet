@@ -13,6 +13,10 @@ Fitur  :
 - Request booking room meeting (General) (nantinya akan ada check request berapa orang dalam room dan capacity dari roomnya)
 - CRUD Inventory (Belum sempat Di Develop)
 
+Role :
+-"general"
+-"admin"
+
 Database :
 - Users : id, name, password, role
 
