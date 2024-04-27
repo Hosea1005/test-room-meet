@@ -1,6 +1,6 @@
 # room-meet
 
-Room Meet merupakan aplikasi untuk management room meeting, pada aplikasi ini terdiri dari 2 role antara lain "admin" dan "general". Admin dapat melakukan CRUD pada Room Meeting dan admin dapat rejected atau approved bookingan room dari general. Admin juga dapat Melakukan CRUD Inventory, yang dimana inventory merupakan item-item apa saja yang ada pada room meet. General dapat melihat list room meet yang available, dan juga dapat melakukan booking pada room tersebut, namun berdasarkan capacity dari room tersebut.
+Room Meet merupakan aplikasi untuk management room meeting, pada aplikasi ini terdiri dari 2 role antara lain "admin" dan "general". Admin dapat melakukan CRUD pada Room Meeting dan admin dapat rejected atau approved bookingan room dari general. Admin juga dapat Melakukan CRUD Inventory, yang dimana inventory merupakan item-item apa saja yang ada pada room meet. General dapat melihat list room meet yang available, dan juga dapat melakukan booking pada room tersebut, namun berdasarkan capacity dari room tersebut. Aplikasi ini akan semakin berkembang dan semakin complex seiring dengan perkembangan kebutuhan dari user. Thank you.
 
 Fitur  :
 - Show list room (Status user General dan Admin)
