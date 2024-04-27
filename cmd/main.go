@@ -14,7 +14,7 @@ import (
 func main() {
 	logger := config.Logger()
 	config.Environment()
-	logger.Info("initializing service product ")
+	logger.Info("initializing service room meet")
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
