@@ -24,6 +24,8 @@ func NewDeliveryHttpArea(r *mux.Router, usecase usecase.RoomUseCase) RoomHandler
 	api.HandleFunc("/delete-room/{id}", handler.DeleteRoom).Methods("DELETE")
 	api.HandleFunc("/update-room/{id}", handler.UpdateRoom).Methods("PUT")
 	api.HandleFunc("/update-status/{id}", handler.UpdateStatus).Methods("PUT")
+	api1 := r.PathPrefix("/book").Subrouter()
+	api1.HandleFunc("/request-room/{id}", handler.RequestRoom).Methods("PUT")
 	log.Fatal(http.ListenAndServe(":8080", r))
 	return handler
 }

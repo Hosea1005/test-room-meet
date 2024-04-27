@@ -7,10 +7,10 @@ Fitur  :
 - Update status room (admin)
 - Order Room (Status user General)
 - Login and Register user
-- 
- Fitur Belum Sempat Di Develop
 - Akses masing2 fitur (belum sempat fungsi check JWT)
 - Request booking room meeting (General) (nantinya akan ada check request berapa orang dalam room dan capacity dari roomnya)
+  
+- Fitur Belum Sempat Di Develop
 - CRUD Inventory (Belum sempat Di Develop)
 
 Role :

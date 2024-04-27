@@ -2,13 +2,11 @@ package repository
 
 import (
 	"context"
-	"log"
 	"room-meet/domain/entity"
 	"room-meet/internal/model"
 )
 
 func (s *RoomRepository) InsertRoom(ctx context.Context, data *entity.Room) (*entity.Room, error) {
-	log.Println(data.Status())
 	room := model.Room{
 		ID:        data.Id(),
 		Name:      data.Name(),

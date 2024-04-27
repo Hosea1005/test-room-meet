@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"room-meet/internal/http/request"
 	"room-meet/internal/model"
 )
@@ -12,7 +11,6 @@ import (
 func (s *RoomRepository) GetListRoom(ctx context.Context, req request.ListRoomRequest) (*[]model.Room, error) {
 	var products []model.Room
 	db := s.super.PostgresSql
-	log.Println(req)
 	// Memulai query dengan tabel produk
 	query := db.Model(&model.Room{})
 

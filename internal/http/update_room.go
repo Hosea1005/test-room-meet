@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gorilla/mux"
-	"log"
 	"net/http"
 	"room-meet/domain/entity"
 	"room-meet/helper"
@@ -19,7 +18,6 @@ func (a RoomHandler) UpdateRoom(w http.ResponseWriter, r *http.Request) {
 	)
 	token := r.Header.Get("Authorization")
 	claim, err := helper.CheckJWT(token, config.JWT_KEY)
-	log.Println(err, claim)
 	if err != nil {
 		helper.RespondWithJSON(w, http.StatusForbidden, response.Status{
 			Code:    403,
@@ -43,7 +41,6 @@ func (a RoomHandler) UpdateRoom(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 	vars := mux.Vars(r)
-	log.Println(vars["id"])
 	req.Id, _ = helper.ConvertStringToUUID(vars["id"])
 	payload, _ := entity.NewRoom(&entity.RoomDTO{
 		Id:       req.Id,

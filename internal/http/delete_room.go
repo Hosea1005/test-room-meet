@@ -2,7 +2,6 @@ package http
 
 import (
 	"github.com/gorilla/mux"
-	"log"
 	"net/http"
 	"room-meet/helper"
 	"room-meet/internal/config"
@@ -33,7 +32,6 @@ func (a RoomHandler) DeleteRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	vars := mux.Vars(r)
-	log.Println(vars["id"])
 	req.Id = vars["id"]
 
 	res := a.usecase.DeleteRoom(r.Context(), req.Id)
