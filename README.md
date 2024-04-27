@@ -14,8 +14,28 @@ Fitur  :
 - CRUD Inventory (Belum sempat Di Develop)
 
 Database :
-- User : id, name, password, role
-- Room : id, name, location, location, id inventory, status, capacity
+- Users : id, name, password, role
 
+  CREATE TABLE "users" (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(255) NOT NULL,
+  password TEXT NOT NULL,
+  role VARCHAR(50) NOT NULL DEFAULT 'general',
+  email VARCHAR(255) NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT current_timestamp
+  );
+- Room : id, name, location, location, status, capacity,updated_at,created_at,deleted_at
+
+CREATE TABLE Rooms (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+location VARCHAR(255) NOT NULL,
+status VARCHAR(50) NOT NULL,
+capacity INT NOT NULL,
+created_at TIMESTAMP DEFAULT current_timestamp,
+deleted_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL
+
+);
 Table Belum Sempat Di Develop
 - Inventory : id, name, status, qty 
