@@ -1,16 +1,26 @@
-# test-room-meet
+# room-meet
+
+Room Meet merupakan aplikasi untuk management room meeting, pada aplikasi ini terdiri dari 2 role antara lain "admin" dan "general". Admin dapat melakukan CRUD pada Room Meeting dan admin dapat rejected atau approved bookingan room dari general. Admin juga dapat Melakukan CRUD Inventory, yang dimana inventory merupakan item-item apa saja yang ada pada room meet. General dapat melihat list room meet yang available, dan juga dapat melakukan booking pada room tersebut, namun berdasarkan capacity dari room tersebut.
+
 Fitur  :
 - Show list room (Status user General dan Admin)
+- http://localhost:8080/room"
 - Update room (admin)
+- http://localhost:8080/room/update-room/{id}"
 - Add new room (admin)
+- http://localhost:8080/room/add-room
 - Delete room (admin)
-- Update status room (admin)
-- Order Room (Status user General)
-- Login and Register user
+- http://localhost:8080/room/delete-room/{id}
+- Update status room (admin))
+- http://localhost:8080/room/update-status/{id}  [status only:"rejected" or "approved"]
+- Login and Register user :
+- http://localhost:8080/login
+- http://localhost:8080/register
 - Akses masing2 fitur (belum sempat fungsi check JWT)
 - Request booking room meeting (General) (nantinya akan ada check request berapa orang dalam room dan capacity dari roomnya)
-  
-- Fitur Belum Sempat Di Develop
+- http://localhost:8080/book/request-room/{id}
+
+  Fitur Belum Sempat Di Develop
 - CRUD Inventory (Belum sempat Di Develop)
 
 Role :
